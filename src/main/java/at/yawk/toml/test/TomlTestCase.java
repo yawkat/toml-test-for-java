@@ -20,8 +20,8 @@ import org.jspecify.annotations.Nullable;
  * @param valid whether this case is valid TOML and has expected tagged JSON
  * @param category upstream category directory, or an empty string for root-level valid tests
  * @param tomlSpecVersions TOML spec versions whose upstream file list includes this test
- * @param tomlResourcePath classpath resource path for the TOML fixture
- * @param expectedJsonResourcePath classpath resource path for the expected tagged JSON fixture, or {@code null} for invalid tests
+ * @param tomlResourcePath package-relative classpath resource path for the TOML fixture
+ * @param expectedJsonResourcePath package-relative classpath resource path for the expected tagged JSON fixture, or {@code null} for invalid tests
  */
 public record TomlTestCase(
         String id,

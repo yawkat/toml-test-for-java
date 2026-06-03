@@ -9,9 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -101,8 +100,14 @@ class TomlTestSuiteTest {
     }
 
     private static void assertVersionList(TomlSpecVersion version, String resourceName) throws IOException {
-        Path resourceRoot = Path.of("toml-test/tests");
-        List<String> lines = Files.readAllLines(resourceRoot.resolve(resourceName), StandardCharsets.UTF_8);
+        String listResourcePath = "tests/" + resourceName;
+        List<String> lines;
+        try (InputStream stream = TomlTestSuiteTest.class.getResourceAsStream(listResourcePath)) {
+            if (stream == null) {
+                throw new AssertionError("Missing classpath resource: " + listResourcePath);
+            }
+            lines = new String(stream.readAllBytes(), StandardCharsets.UTF_8).lines().toList();
+        }
         Set<String> expectedTomlIds = new HashSet<>();
         Set<String> expectedJsonResources = new HashSet<>();
         for (String line : lines) {
