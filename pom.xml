@@ -40,7 +40,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.outputTimestamp>2026-06-03T00:00:00Z</project.build.outputTimestamp>
     <maven.compiler.release>17</maven.compiler.release>
-    <junit.version>5.13.0</junit.version>
+    <junit.version>6.1.0</junit.version>
     <jspecify.version>1.0.0</jspecify.version>
     <uv.executable>uv</uv.executable>
   </properties>
@@ -80,7 +80,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>exec-maven-plugin</artifactId>
-        <version>3.5.0</version>
+        <version>3.6.3</version>
         <executions>
           <execution>
             <id>generate-toml-tests</id>
@@ -108,7 +108,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>build-helper-maven-plugin</artifactId>
-        <version>3.6.0</version>
+        <version>3.6.1</version>
         <executions>
           <execution>
             <id>add-generated-sources</id>
@@ -126,18 +126,18 @@
       </plugin>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.14.0</version>
+        <version>3.15.0</version>
         <configuration>
           <release>${maven.compiler.release}</release>
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
-        <version>3.5.3</version>
+        <version>3.5.6</version>
       </plugin>
       <plugin>
         <artifactId>maven-jar-plugin</artifactId>
-        <version>3.4.2</version>
+        <version>3.5.0</version>
         <configuration>
           <archive>
             <manifestEntries>
@@ -148,7 +148,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-source-plugin</artifactId>
-        <version>3.3.1</version>
+        <version>3.4.0</version>
         <executions>
           <execution>
             <id>attach-sources</id>
@@ -160,7 +160,7 @@
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.11.2</version>
+        <version>3.12.0</version>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -180,7 +180,7 @@
         <plugins>
           <plugin>
             <artifactId>maven-gpg-plugin</artifactId>
-            <version>3.2.7</version>
+            <version>3.2.8</version>
             <executions>
               <execution>
                 <id>sign-artifacts</id>
@@ -194,7 +194,7 @@
           <plugin>
             <groupId>org.sonatype.central</groupId>
             <artifactId>central-publishing-maven-plugin</artifactId>
-            <version>0.8.0</version>
+            <version>0.10.0</version>
             <extensions>true</extensions>
             <configuration>
               <publishingServerId>central</publishingServerId>

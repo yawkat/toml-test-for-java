@@ -39,7 +39,7 @@ public final class TomlTestSuite {
      *
      * @return immutable list of valid TOML 1.0.0 cases
      */
-    public static List<TomlTestCase> validToml10() {
+    public static List<TomlTestCase> validToml100() {
         return VALID_TOML_10;
     }
 
@@ -48,7 +48,7 @@ public final class TomlTestSuite {
      *
      * @return immutable list of invalid TOML 1.0.0 cases
      */
-    public static List<TomlTestCase> invalidToml10() {
+    public static List<TomlTestCase> invalidToml100() {
         return INVALID_TOML_10;
     }
 
@@ -57,7 +57,7 @@ public final class TomlTestSuite {
      *
      * @return immutable list of valid TOML 1.1.0 cases
      */
-    public static List<TomlTestCase> validToml11() {
+    public static List<TomlTestCase> validToml110() {
         return VALID_TOML_11;
     }
 
@@ -66,7 +66,7 @@ public final class TomlTestSuite {
      *
      * @return immutable list of invalid TOML 1.1.0 cases
      */
-    public static List<TomlTestCase> invalidToml11() {
+    public static List<TomlTestCase> invalidToml110() {
         return INVALID_TOML_11;
     }
 

@@ -23,14 +23,14 @@ class TomlTestSuiteTest {
     @Test
     void exposesExpectedCounts() {
         assertTrue(TomlTestSuite.all().size() >= 700);
-        assertTrue(TomlTestSuite.validToml10().size() >= 200);
-        assertTrue(TomlTestSuite.invalidToml10().size() >= 450);
-        assertTrue(TomlTestSuite.validToml11().size() >= 200);
-        assertTrue(TomlTestSuite.invalidToml11().size() >= 450);
+        assertTrue(TomlTestSuite.validToml100().size() >= 200);
+        assertTrue(TomlTestSuite.invalidToml100().size() >= 450);
+        assertTrue(TomlTestSuite.validToml110().size() >= 200);
+        assertTrue(TomlTestSuite.invalidToml110().size() >= 450);
     }
 
     @ParameterizedTest
-    @MethodSource("at.yawk.toml.test.TomlTestSuite#validToml10")
+    @MethodSource("at.yawk.toml.test.TomlTestSuite#validToml100")
     void methodSourceCanIterateValidToml10Cases(TomlTestCase test) {
         assertTrue(test.valid(), test.id());
         assertTrue(test.supports(TomlSpecVersion.TOML_1_0_0), test.id());

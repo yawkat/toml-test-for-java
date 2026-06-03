@@ -12,7 +12,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 
 class MyTomlParserTest {
     @ParameterizedTest
-    @MethodSource("at.yawk.toml.test.TomlTestSuite#validToml10")
+    @MethodSource("at.yawk.toml.test.TomlTestSuite#validToml100")
     void parsesOfficialToml10Cases(TomlTestCase test) {
         byte[] toml = test.tomlBytes();
         String expectedJson = test.expectedJson();
