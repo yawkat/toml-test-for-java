@@ -23,7 +23,7 @@ class MyTomlParserTest {
 }
 ```
 
-Valid cases include TOML input plus expected tagged JSON. Invalid cases include TOML input that compliant decoders should reject. Version-specific membership is generated at build time by `uv run --locked` from upstream `tests/files-toml-1.0.0` and `tests/files-toml-1.1.0` instead of inferring from directory names.
+Valid cases include TOML input plus expected tagged JSON. Invalid cases include TOML input that compliant decoders should reject. Choose the list for the TOML version your parser is running in; a TOML 1.0.0 conformance test should use the TOML 1.0.0 valid and invalid lists, while TOML 1.1.0 mode should use the TOML 1.1.0 lists. Some inputs that are invalid TOML 1.0.0 are valid TOML 1.1.0, so a parser should not be expected to pass both version suites at once. Version-specific membership is generated at build time by `uv run --locked` from upstream `tests/files-toml-1.0.0` and `tests/files-toml-1.1.0` instead of inferring from directory names.
 
 ## Versioning
 

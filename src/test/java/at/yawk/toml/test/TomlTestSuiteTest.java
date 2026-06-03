@@ -63,6 +63,21 @@ class TomlTestSuiteTest {
     }
 
     @Test
+    void versionSpecificSuitesRemainDistinct() {
+        TomlTestCase toml11OnlyValid = find("valid/inline-table/newline");
+        assertFalse(toml11OnlyValid.supports(TomlSpecVersion.TOML_1_0_0));
+        assertTrue(toml11OnlyValid.supports(TomlSpecVersion.TOML_1_1_0));
+        assertFalse(TomlTestSuite.validToml100().contains(toml11OnlyValid));
+        assertTrue(TomlTestSuite.validToml110().contains(toml11OnlyValid));
+
+        TomlTestCase toml10OnlyInvalid = find("invalid/inline-table/linebreak-01");
+        assertTrue(toml10OnlyInvalid.supports(TomlSpecVersion.TOML_1_0_0));
+        assertFalse(toml10OnlyInvalid.supports(TomlSpecVersion.TOML_1_1_0));
+        assertTrue(TomlTestSuite.invalidToml100().contains(toml10OnlyInvalid));
+        assertFalse(TomlTestSuite.invalidToml110().contains(toml10OnlyInvalid));
+    }
+
+    @Test
     void preservesEdgeCaseFixtureBytes() {
         TomlTestCase emptyNothing = find("valid/empty-nothing");
         assertArrayEquals(new byte[0], emptyNothing.tomlBytes());
