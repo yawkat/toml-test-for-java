@@ -50,6 +50,7 @@
       <groupId>org.jspecify</groupId>
       <artifactId>jspecify</artifactId>
       <version>${jspecify.version}</version>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.junit.jupiter</groupId>
@@ -141,7 +142,6 @@
           <archive>
             <manifestEntries>
               <Automatic-Module-Name>at.yawk.toml.test</Automatic-Module-Name>
-              <Toml-Test-Version>2.2.0</Toml-Test-Version>
             </manifestEntries>
           </archive>
         </configuration>

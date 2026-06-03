@@ -25,10 +25,6 @@ jobs:
         with:
           enable-cache: true
           cache-dependency-glob: tools/codegen/uv.lock
-      - name: Set up Python
-        uses: actions/setup-python@v6
-        with:
-          python-version-file: tools/codegen/pyproject.toml
       - name: Sync codegen environment
         working-directory: tools/codegen
         run: uv sync --locked

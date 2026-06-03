@@ -6,10 +6,10 @@ import java.util.Objects;
 /** Entry point for enumerating the embedded upstream {@code toml-test} cases. */
 public final class TomlTestSuite {
     private static final List<TomlTestCase> ALL_TESTS = GeneratedTomlTests.ALL;
-    private static final List<TomlTestCase> VALID_TOML_10 = valid(TomlSpecVersion.TOML_1_0_0);
-    private static final List<TomlTestCase> INVALID_TOML_10 = invalid(TomlSpecVersion.TOML_1_0_0);
-    private static final List<TomlTestCase> VALID_TOML_11 = valid(TomlSpecVersion.TOML_1_1_0);
-    private static final List<TomlTestCase> INVALID_TOML_11 = invalid(TomlSpecVersion.TOML_1_1_0);
+    private static final List<TomlTestCase> VALID_TOML_10 = filter(TomlSpecVersion.TOML_1_0_0, true);
+    private static final List<TomlTestCase> INVALID_TOML_10 = filter(TomlSpecVersion.TOML_1_0_0, false);
+    private static final List<TomlTestCase> VALID_TOML_11 = filter(TomlSpecVersion.TOML_1_1_0, true);
+    private static final List<TomlTestCase> INVALID_TOML_11 = filter(TomlSpecVersion.TOML_1_1_0, false);
 
     private TomlTestSuite() {
     }
@@ -70,11 +70,7 @@ public final class TomlTestSuite {
         return INVALID_TOML_11;
     }
 
-    private static List<TomlTestCase> valid(TomlSpecVersion version) {
-        return ALL_TESTS.stream().filter(test -> test.valid() && test.supports(version)).toList();
-    }
-
-    private static List<TomlTestCase> invalid(TomlSpecVersion version) {
-        return ALL_TESTS.stream().filter(test -> !test.valid() && test.supports(version)).toList();
+    private static List<TomlTestCase> filter(TomlSpecVersion version, boolean valid) {
+        return ALL_TESTS.stream().filter(test -> test.valid() == valid && test.supports(version)).toList();
     }
 }
