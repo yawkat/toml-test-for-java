@@ -1,0 +1,9 @@
+/target/
+/.classpath
+/.project
+/.settings/
+*.iml
+.git-versioned-pom.xml
+/.venv/
+/tools/codegen/.venv/
+/.uv-cache/
