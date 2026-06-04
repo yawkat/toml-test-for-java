@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.DoublePredicate;
+import java.util.regex.Pattern;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -22,6 +23,8 @@ import org.jspecify.annotations.Nullable;
  * strings.</p>
  */
 public abstract class TomlExpectedDocumentValidator {
+    private static final Pattern SIMPLE_PATH_SEGMENT = Pattern.compile("[A-Za-z_][A-Za-z0-9_]*");
+
     /**
      * Parses expected tagged JSON text into a JSON-like object model.
      *
@@ -317,34 +320,10 @@ public abstract class TomlExpectedDocumentValidator {
     }
 
     private static String childPath(String path, String key) {
-        if (isSimpleIdentifier(key)) {
+        if (SIMPLE_PATH_SEGMENT.matcher(key).matches()) {
             return path + "." + key;
         }
         return path + "[" + quote(key) + "]";
-    }
-
-    private static boolean isSimpleIdentifier(String key) {
-        if (key.isEmpty()) {
-            return false;
-        }
-        char first = key.charAt(0);
-        if (!isIdentifierStart(first)) {
-            return false;
-        }
-        for (int i = 1; i < key.length(); i++) {
-            if (!isIdentifierPart(key.charAt(i))) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private static boolean isIdentifierStart(char c) {
-        return c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' || c == '_';
-    }
-
-    private static boolean isIdentifierPart(char c) {
-        return isIdentifierStart(c) || c >= '0' && c <= '9';
     }
 
     private static IllegalArgumentException malformed(String path, String message) {
