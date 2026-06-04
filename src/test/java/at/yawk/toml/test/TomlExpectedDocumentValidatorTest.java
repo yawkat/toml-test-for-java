@@ -42,10 +42,44 @@ class TomlExpectedDocumentValidatorTest {
     @Test
     void validatesArraysAndNumericEquivalence() {
         TestValidator validator = new TestValidator(Map.of(
-                "array", List.of(tagged("integer", "1"), tagged("float", "1.10"), tagged("float", "inf"), tagged("float", "nan"))));
+                "array", List.of(
+                        tagged("integer", "1"),
+                        tagged("float", "1.10"),
+                        tagged("float", "inf"),
+                        tagged("float", "-inf"),
+                        tagged("float", "nan"))));
         TomlTestCase test = validTestCase();
 
-        validator.validate(test, Map.of("array", List.of(BigInteger.ONE, new BigDecimal("1.1"), Double.POSITIVE_INFINITY, Double.NaN)));
+        validator.validate(test, Map.of("array", List.of(
+                BigInteger.ONE,
+                new BigDecimal("1.1"),
+                Double.POSITIVE_INFINITY,
+                Double.NEGATIVE_INFINITY,
+                Double.NaN)));
+    }
+
+    @Test
+    void rejectsUnsupportedActualIntegerTypeWithAssertionMessage() {
+        TestValidator validator = new TestValidator(Map.of("integer", tagged("integer", "1")));
+        TomlTestCase test = validTestCase();
+
+        AssertionError error = assertThrows(AssertionError.class, () ->
+                validator.validate(test, Map.of("integer", new BigDecimal("1"))));
+
+        assertTrue(error.getMessage().contains("$.integer"), error.getMessage());
+        assertTrue(error.getMessage().contains("Expected integer 1"), error.getMessage());
+    }
+
+    @Test
+    void rejectsOverflowingFiniteNumberForExpectedInfinity() {
+        TestValidator validator = new TestValidator(Map.of("float", tagged("float", "inf")));
+        TomlTestCase test = validTestCase();
+
+        AssertionError error = assertThrows(AssertionError.class, () ->
+                validator.validate(test, Map.of("float", new BigDecimal("1e9999"))));
+
+        assertTrue(error.getMessage().contains("$.float"), error.getMessage());
+        assertTrue(error.getMessage().contains("Expected float inf"), error.getMessage());
     }
 
     @Test

@@ -5,6 +5,7 @@ import java.math.BigInteger;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.DoublePredicate;
 import org.jspecify.annotations.Nullable;
 
 /**
@@ -71,7 +72,7 @@ public abstract class TomlExpectedDocumentValidator {
     protected void validateInteger(String path, String expected, Object actual) {
         BigInteger expectedInteger = parseBigInteger(path, expected);
         BigInteger actualInteger = toBigInteger(actual);
-        if (!expectedInteger.equals(actualInteger)) {
+        if (actualInteger == null || !expectedInteger.equals(actualInteger)) {
             fail(path, "Expected integer " + expected + " but was " + describe(actual));
         }
     }
@@ -85,14 +86,9 @@ public abstract class TomlExpectedDocumentValidator {
      */
     protected void validateFloat(String path, String expected, Object actual) {
         switch (expected) {
-            case "inf" -> validateSpecialFloat(path, Double.POSITIVE_INFINITY, actual);
-            case "-inf" -> validateSpecialFloat(path, Double.NEGATIVE_INFINITY, actual);
-            case "nan" -> {
-                if (!(actual instanceof Double doubleValue && Double.isNaN(doubleValue)) &&
-                        !(actual instanceof Float floatValue && Float.isNaN(floatValue))) {
-                    fail(path, "Expected float nan but was " + describe(actual));
-                }
-            }
+            case "inf" -> validateSpecialFloat(path, "inf", actual, number -> number > 0 && Double.isInfinite(number));
+            case "-inf" -> validateSpecialFloat(path, "-inf", actual, number -> number < 0 && Double.isInfinite(number));
+            case "nan" -> validateSpecialFloat(path, "nan", actual, Double::isNaN);
             default -> validateFiniteFloat(path, expected, actual);
         }
     }
@@ -209,7 +205,6 @@ public abstract class TomlExpectedDocumentValidator {
                     fail(childPath(path, (String) key), "Unexpected key");
                 }
             }
-            fail(path, "Expected table with " + expectedMap.size() + " keys but had " + actualMap.size());
         }
         for (Map.Entry<?, ?> entry : expectedMap.entrySet()) {
             String key = (String) entry.getKey();
@@ -258,9 +253,18 @@ public abstract class TomlExpectedDocumentValidator {
         }
     }
 
-    private static void validateSpecialFloat(String path, double expected, Object actual) {
-        if (!(actual instanceof Number actualNumber) || Double.compare(actualNumber.doubleValue(), expected) != 0) {
-            fail(path, "Expected float " + (expected > 0 ? "inf" : "-inf") + " but was " + describe(actual));
+    private static void validateSpecialFloat(String path, String expected, Object actual, DoublePredicate matches) {
+        double actualValue;
+        if (actual instanceof Double doubleValue) {
+            actualValue = doubleValue;
+        } else if (actual instanceof Float floatValue) {
+            actualValue = floatValue.doubleValue();
+        } else {
+            fail(path, "Expected float " + expected + " but was " + describe(actual));
+            return;
+        }
+        if (!matches.test(actualValue)) {
+            fail(path, "Expected float " + expected + " but was " + describe(actual));
         }
     }
 
@@ -313,10 +317,34 @@ public abstract class TomlExpectedDocumentValidator {
     }
 
     private static String childPath(String path, String key) {
-        if (key.matches("[A-Za-z_][A-Za-z0-9_]*")) {
+        if (isSimpleIdentifier(key)) {
             return path + "." + key;
         }
         return path + "[" + quote(key) + "]";
+    }
+
+    private static boolean isSimpleIdentifier(String key) {
+        if (key.isEmpty()) {
+            return false;
+        }
+        char first = key.charAt(0);
+        if (!isIdentifierStart(first)) {
+            return false;
+        }
+        for (int i = 1; i < key.length(); i++) {
+            if (!isIdentifierPart(key.charAt(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private static boolean isIdentifierStart(char c) {
+        return c >= 'A' && c <= 'Z' || c >= 'a' && c <= 'z' || c == '_';
+    }
+
+    private static boolean isIdentifierPart(char c) {
+        return isIdentifierStart(c) || c >= '0' && c <= '9';
     }
 
     private static IllegalArgumentException malformed(String path, String message) {
